@@ -13,81 +13,54 @@ TestCase subclass: #IdiomTest
 	poolDictionaries: ''
 	category: 'Idiom-Exercise'!
 
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/21/2017 20:27:22'!
-assert: aBlock duration: cTime
-	|milisecondsBeforeRunning milisecondsAfterRunning|
-	
-	milisecondsBeforeRunning := Time millisecondClockValue.
-	aBlock value.
-	milisecondsAfterRunning := Time millisecondClockValue.
-	
-	self assert: (milisecondsAfterRunning-milisecondsBeforeRunning) < cTime
-	! !
-
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/24/2017 17:04:33'!
-exceptionAnOperation: aBlock
-	"comment stating purpose of message"
-
-	| customerBook johnLennon |
-			
-	customerBook := CustomerBook new.
-	johnLennon := 'John Lennon'.	
-	
-	[ aBlock value.
-	self fail ]
-		on: NotFound 
-		do: [ :anError |
-			self assert: (customerBook includesCustomerNamed: johnLennon) ]
-		on: Error
-		do: [ :anError | 
-			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
-			self assert: customerBook isEmpty ]! !
-
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/24/2017 20:23:47'!
-exceptionAnOperation: aBlock withMessage: aBloque
-	"comment stating purpose of message"
-
-	[ aBlock value.
-	self fail ]
-		on: Error 
-		do: aBloque.
-! !
-
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/21/2017 20:54:49'!
+!IdiomTest methodsFor: 'testing' stamp: 'HAW 4/14/2017 16:56:37'!
 test01AddingCustomerShouldNotTakeMoreThan50Milliseconds
 
-	| customerBook |
+	| customerBook millisecondsBeforeRunning millisecondsAfterRunning |
 	
 	customerBook := CustomerBook  new.
 	
-	self assert: [customerBook addCustomerNamed: 'John Lennon'.] duration: 50.
-
+	millisecondsBeforeRunning := Time millisecondClockValue.
+	customerBook addCustomerNamed: 'John Lennon'.
+	millisecondsAfterRunning := Time millisecondClockValue.
+	
+	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < 50 
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/21/2017 21:05:17'!
+!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 4/11/2016 20:29'!
 test02RemovingCustomerShouldNotTakeMoreThan100Milliseconds
 
-	| customerBook |
+	| customerBook millisecondsBeforeRunning millisecondsAfterRunning paulMcCartney |
 	
 	customerBook := CustomerBook  new.
+	paulMcCartney := 'Paul McCartney'.
 	
-	customerBook addCustomerNamed: 'Paul McCartney'.
+	customerBook addCustomerNamed: paulMcCartney.
+	  
+	millisecondsBeforeRunning := Time millisecondClockValue.
+	customerBook removeCustomerNamed: paulMcCartney.
+	millisecondsAfterRunning := Time millisecondClockValue.
 	
-	self assert: [customerBook removeCustomerNamed: 'Paul McCartney'.] duration: 100. 
+	self assert: (millisecondsAfterRunning-millisecondsBeforeRunning) < 100 
 	
 ! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/24/2017 18:42:04'!
+!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 5/9/2012 18:12'!
 test03CanNotAddACustomerWithEmptyName 
 
 	| customerBook |
 			
 	customerBook := CustomerBook new.
-	
-	self exceptionAnOperation:[customerBook addCustomerNamed: ''].! !
 
-!IdiomTest methodsFor: 'testing' stamp: 'asd 4/24/2017 20:24:07'!
+	[ customerBook addCustomerNamed: ''.
+	self fail ]
+		on: Error 
+		do: [ :anError | 
+			self assert: anError messageText = CustomerBook customerCanNotBeEmptyErrorMessage.
+			self assert: customerBook isEmpty ]! !
+
+!IdiomTest methodsFor: 'testing' stamp: 'HernanWilkinson 5/16/2012 16:50'!
 test04CanNotRemoveAndInvalidCustomer
 	
 	| customerBook johnLennon |
@@ -95,9 +68,14 @@ test04CanNotRemoveAndInvalidCustomer
 	customerBook := CustomerBook new.
 	johnLennon := 'John Lennon'.
 	customerBook addCustomerNamed: johnLennon.
-	self exceptionAnOperation: [customerBook removeCustomerNamed: 'Paul McCartney'] withMessage:[:aName|
+	
+	[ customerBook removeCustomerNamed: 'Paul McCartney'.
+	self fail ]
+		on: NotFound 
+		do: [ :anError | 
 			self assert: customerBook numberOfCustomers = 1.
-			self assert: (customerBook includesCustomerNamed: johnLennon) ].! !
+			self assert: (customerBook includesCustomerNamed: johnLennon) ]
+! !
 
 
 !classDefinition: #CustomerBook category: #'Idiom-Exercise'!
@@ -107,7 +85,7 @@ Object subclass: #CustomerBook
 	poolDictionaries: ''
 	category: 'Idiom-Exercise'!
 
-!CustomerBook methodsFor: 'testing' stamp: 'asd 4/24/2017 16:45:22'!
+!CustomerBook methodsFor: 'testing' stamp: 'HernanWilkinson 7/6/2011 17:56'!
 includesCustomerNamed: aName
 
 	^customers includes: aName ! !
