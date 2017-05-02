@@ -223,6 +223,37 @@ isZero
 
 	self subclassResponsibility ! !
 
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:09'!
+addEntero: anAdder
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:09'!
+addFraccion: anAdder
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:10'!
+divideEntero: aDividend
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:10'!
+divideFraccion: aDividend
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:09'!
+multiplyEntero: aMultiplier
+
+	self subclassResponsibility ! !
+
+!Numero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:09'!
+multiplyFraccion: aMultiplier
+
+	self subclassResponsibility ! !
+
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
 !classDefinition: 'Numero class' category: #'Numero-Exercise'!
@@ -282,25 +313,21 @@ initalizeWith: aValue
 	value := aValue! !
 
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'asd 5/2/2017 12:55:36'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 17:39:20'!
 * aMultiplier 
 	
-	(aMultiplier isKindOf: self class)  ifTrue:[^self class with: value * aMultiplier integerValue].
-	(aMultiplier isKindOf: Fraccion)  ifTrue:[^(self * aMultiplier numerator)/aMultiplier denominator].
-! !
+	"^self class with: value * aMultiplier integerValue"
+	^aMultiplier multiplyEntero: self! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'asd 5/2/2017 12:54:43'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 18:31:07'!
 + anAdder 
 	
-	(anAdder isKindOf: self class)  ifTrue:[^ self class with:value + anAdder integerValue].
-	(anAdder isKindOf: Fraccion)  ifTrue:[^(self * anAdder denominator  + anAdder numerator)/anAdder denominator].
-	! !
+	^anAdder addEntero: self.! !
 
-!Entero methodsFor: 'arithmetic operations' stamp: 'asd 5/2/2017 12:56:22'!
+!Entero methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 18:33:51'!
 / aDivisor 
 	
-		(aDivisor isKindOf: self class)  ifTrue:[	^Fraccion with: self over: aDivisor].
-		(aDivisor isKindOf: Fraccion)  ifTrue:[^(self * aDivisor denominator)/aDivisor numerator].! !
+	^aDivisor divideEntero: self.! !
 
 !Entero methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 21:55'!
 // aDivisor 
@@ -311,6 +338,39 @@ initalizeWith: aValue
 greatestCommonDivisorWith: anEntero 
 	
 	^self class with: (value gcd: anEntero integerValue)! !
+
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 22:56'!
+addEntero: anAdder 
+	
+	^self class with: value + anAdder integerValue
+! !
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:06'!
+addFraccion: anAdder
+
+	^self + anAdder 
+	! !
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:02'!
+divideEntero: aDividend
+
+	^Fraccion with: aDividend over: self! !
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:08'!
+divideFraccion: aDividend
+
+	^aDividend numerator / (aDividend denominator * self) ! !
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:00'!
+multiplyEntero: aMultiplier
+
+	^self class with: value * aMultiplier integerValue ! !
+
+!Entero methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:04'!
+multiplyFraccion: aMultiplier
+
+	^self * aMultiplier ! !
 
 "-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
 
@@ -367,26 +427,64 @@ hash
 	^(numerator hash / denominator hash) hash! !
 
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
-* aMultiplier 
-	
-	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
-	! !
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 22:58'!
+addEntero: anAdder
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
-+ anAdder 
-	
+	^anAdder * denominator + numerator / denominator ! !
+
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:05'!
+addFraccion: anAdder
+
 	| newNumerator newDenominator |
 	
 	newNumerator := (numerator * anAdder denominator) + (denominator * anAdder numerator).
 	newDenominator := denominator * anAdder denominator.
 	
-	^newNumerator / newDenominator ! !
+	^newNumerator / newDenominator 
+! !
 
-!Fraccion methodsFor: 'arithmetic operations' stamp: 'HernanWilkinson 5/7/2016 23:14'!
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:02'!
+divideEntero: aDividend
+
+	^aDividend * denominator / numerator
+	! !
+
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:07'!
+divideFraccion: aDividend
+
+	^(aDividend numerator * denominator) / (aDividend denominator * numerator)
+	! !
+
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:01'!
+multiplyEntero: aMultiplier
+
+	^aMultiplier * numerator / denominator 
+	! !
+
+!Fraccion methodsFor: 'arithmetic operations - private' stamp: 'HernanWilkinson 5/7/2016 23:03'!
+multiplyFraccion: aMultiplier
+
+	^(numerator * aMultiplier numerator) / (denominator * aMultiplier denominator)
+	! !
+
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 18:34:57'!
+* aMultiplier 
+	
+	^ aMultiplier multiplyFraccion: self.! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 18:37:04'!
++ anAdder 
+	
+	^ anAdder addFraccion: self.
+	
+! !
+
+!Fraccion methodsFor: 'arithmetic operations' stamp: 'adfas 5/2/2017 18:37:52'!
 / aDivisor 
 	
-	^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)! !
+	"^(numerator * aDivisor denominator) / (denominator * aDivisor numerator)"
+	^aDivisor divideFraccion: self.! !
 
 
 !Fraccion methodsFor: 'accessing' stamp: 'HernanWilkinson 5/7/2016 21:56'!
@@ -403,7 +501,7 @@ numerator
 
 !classDefinition: 'Fraccion class' category: #'Numero-Exercise'!
 Fraccion class
-	instanceVariableNames: ''!
+	instanceVariableNames: 'denominator'!
 
 !Fraccion class methodsFor: 'intance creation' stamp: 'HernanWilkinson 5/7/2016 20:41'!
 with: aDividend over: aDivisor
