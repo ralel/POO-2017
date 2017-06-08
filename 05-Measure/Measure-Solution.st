@@ -149,9 +149,10 @@ term
 Expression class
 	instanceVariableNames: ''!
 
-!Expression class methodsFor: 'as yet unclassified' stamp: 'asd 6/7/2017 13:59:20'!
+!Expression class methodsFor: 'as yet unclassified' stamp: 'asd 6/8/2017 18:53:44'!
 initializeExpression
-^Expression new initExpression.! !
+^Expression new initExpression.
+"iniciando un diccionario vacio"! !
 
 
 !classDefinition: #Measure category: #'Measure-Solution'!
